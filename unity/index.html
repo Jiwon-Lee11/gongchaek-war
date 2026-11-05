@@ -42,13 +42,15 @@
   const rotBtn = document.getElementById("rotBtn"), de = document.documentElement;
   if (de.requestFullscreen && screen.orientation && screen.orientation.lock) { rotBtn.style.display = "block";
     rotBtn.onclick = () => de.requestFullscreen().then(() => screen.orientation.lock("landscape")).catch(() => {}); }
+  // 파일 이름이 늘 같아서 브라우저가 옛 코드(10분 캐시)와 새 데이터를 섞으면 실행이 터짐. 파일마다 버전을 붙여 한 벌만 받게 함
+  (async () => { const q = new URLSearchParams(location.search), retry = q.get("retry"); let v = ""; try { const r = await fetch("version.txt?t=" + Date.now(), { cache: "no-store" }); if (r.ok) v = "?v=" + (await r.text()).trim(); } catch (e) {} if (retry) v += (v ? "&" : "?") + "r=" + retry;
   createUnityInstance(canvas, {
-    dataUrl: "Build/WebGL.data", frameworkUrl: "Build/WebGL.framework.js", codeUrl: "Build/WebGL.wasm",
+    dataUrl: "Build/WebGL.data" + v, frameworkUrl: "Build/WebGL.framework.js" + v, codeUrl: "Build/WebGL.wasm" + v,
     streamingAssetsUrl: "StreamingAssets", companyName: "5Billion", productName: "공책전쟁", productVersion: "1.0",
     matchWebGLToCanvasSize: true, devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
   }, p => { document.getElementById("fill").style.width = (p * 100) + "%"; })
   .then(() => { document.getElementById("loading").remove(); })
-  .catch(e => { document.getElementById("msg").textContent = "실행 실패: " + e + " — 사파리/크롬 최신 버전으로 열어주세요"; });
+  .catch(e => { if (!retry) { q.set("retry", Date.now()); location.search = q.toString(); return; } document.getElementById("msg").textContent = "실행 실패: " + String(e).slice(0, 200) + " — 사파리/크롬 최신 버전으로 열어주세요"; }); })();   // 한 번은 새로 받아서 자동 재시도
 </script>
 </body>
 </html>
