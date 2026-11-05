@@ -48,6 +48,8 @@
     dataUrl: "Build/WebGL.data" + v, frameworkUrl: "Build/WebGL.framework.js" + v, codeUrl: "Build/WebGL.wasm" + v,
     streamingAssetsUrl: "StreamingAssets", companyName: "5Billion", productName: "공책전쟁", productVersion: "1.0",
     matchWebGLToCanvasSize: true, devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+    // "Script error."는 브라우저가 내용을 가린 오류(확장 프로그램 등 다른 곳에서 난 것일 수 있음). 게임은 계속 돌 수 있으니 팝업으로 막지 않음
+    errorHandler: (m) => { const t = String(m).trim(); console.warn("게임 오류:", t); return /^Script error\.?$/i.test(t); },
   }, p => { document.getElementById("fill").style.width = (p * 100) + "%"; })
   .then(() => { document.getElementById("loading").remove(); })
   .catch(e => { if (!retry) { q.set("retry", Date.now()); location.search = q.toString(); return; } document.getElementById("msg").textContent = "실행 실패: " + String(e).slice(0, 200) + " — 사파리/크롬 최신 버전으로 열어주세요"; }); })();   // 한 번은 새로 받아서 자동 재시도
