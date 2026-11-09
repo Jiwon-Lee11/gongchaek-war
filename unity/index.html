@@ -35,6 +35,7 @@
 <div id="loading"><b>공책전쟁</b><div id="bar"><div id="fill"></div></div><div id="msg">공책 펼치는 중… (처음엔 1~2분 걸려요 · 와이파이 추천)</div></div>
 <div id="rot"><div>📱 폰을 <b>가로로</b> 돌리면 크게 보여요</div><small>안 돌아가면 화면 회전 잠금을 꺼주세요. 세로로도 플레이할 수 있어요.</small><button id="rotBtn">가로 전체화면으로 보기</button></div>
 <script src="Build/WebGL.loader.js"></script>
+<script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function () {});</script>
 <script>
   const canvas = document.getElementById("unity-canvas");
   // 가로로 눕힌 아이폰: 카메라가 있는 쪽만 비워서 왼쪽 메뉴가 가려지지 않게 (양쪽 다 비우면 화면이 너무 작아짐)
